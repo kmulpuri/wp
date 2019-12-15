@@ -28,7 +28,7 @@
                     {% else %}
                     <li><a href="{{ url_for('user', username=current_user.username) }}">Profile</a></li>
                     <li><a href="https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world">Visit tutorial</a></li>
-                    <li><a a href="www.google.com">Contact us</a></li>
+                    <li><a a href="{{ url_for('comment') }}">Comment us</a></li>
                     <li><a href="{{ url_for('logout') }}">Logout</a></li>
                     {% endif %}
                 </ul>

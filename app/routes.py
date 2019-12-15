@@ -4,8 +4,8 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, \
-    ResetPasswordRequestForm, ResetPasswordForm
-from app.models import User, Post
+    ResetPasswordRequestForm, ResetPasswordForm, CommentForm
+from app.models import User, Post, Comment
 from app.email import send_password_reset_email
 
 
@@ -186,3 +186,18 @@ def unfollow(username):
     flash('You are not following {}.'.format(username))
     return redirect(url_for('user', username=username))
 
+@app.route('/comment',methods=['GET', 'POST'])
+def comment():
+    form = CommentForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        print(user)
+        if user is None:
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        comment = Comment(username=form.username.data, comment_text=form.commentInfo.data)
+        db.session.add(comment)
+        db.session.commit()
+        flash('Will reply you soon via mail..')
+        return redirect('index')
+    return render_template('comment.html', form=form)
